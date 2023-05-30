@@ -1,28 +1,34 @@
 // select div where profile information will appear.
-const overview = document.querySelector(".overview")
+const overview = document.querySelector(".overview");
 
 // variable for GitHub username
-const userName = "Nadia982"
+const userName = "Nadia982";
 
 // select the unordered list to display the repos list
-const repoList = document.querySelector(".repo-list")
+const repoList = document.querySelector(".repo-list");
+
+//selects the section with the class “repos” where the repo information appears.
+const reposContainer = document.querySelector(".repos");
+
+//selects the section with the class  “repo-data” where individual repo data will appear.
+const repoData = document.querySelector(".repo-data");
 
 // async function to fetch info from GitHub profile
-async function fetchUser(){
-    const userInfo = await fetch(`https://api.github.com/users/${userName}`)
-    console.log(userInfo)
-    const data = await userInfo.json();
-    console.log(data)
-    displayUserInfo(data)
+async function fetchUser() {
+  const userInfo = await fetch(`https://api.github.com/users/${userName}`);
+  console.log(userInfo);
+  const data = await userInfo.json();
+  console.log(data);
+  displayUserInfo(data);
 }
 
-fetchUser()
+fetchUser();
 
-// Fetch & Display User Information
-const displayUserInfo = function(data) {
-    const div = document.createElement("div")
-    div.classList.add("user-info");
-    div.innerHTML = `
+// Fetch and display user's information
+const displayUserInfo = function (data) {
+  const div = document.createElement("div");
+  div.classList.add("user-info");
+  div.innerHTML = `
     <figure>
     <img alt="photo of Natalie Gillam" src=${data.avatar_url} />
     </figure>
@@ -32,30 +38,71 @@ const displayUserInfo = function(data) {
     <p><strong>Location:</strong> ${data.location}</p>
     <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
   </div> 
-    `
-    overview.append(div)
-    gitRepos()
-}
+    `;
+  overview.append(div);
+  gitRepos();
+};
 
 // Fetch Repos
 const gitRepos = async function () {
-    const fetchRepos = await fetch(`https://api.github.com/users/${userName}/repos?sort=updated&per_page=100&affiliation=owner`);
-    const repoData = await fetchRepos.json();
-    displayRepos(repoData);
-  };
+  const fetchRepos = await fetch(
+    `https://api.github.com/users/${userName}/repos?sort=updated&per_page=100`
+  );
+  const repoData = await fetchRepos.json();
+  displayRepos(repoData);
+};
 
-  // Display Info About Repos
-const displayRepos = function(repos){
-for (const repo of repos){
+// Display info about repos
+const displayRepos = function (repos) {
+  for (const repo of repos) {
     const repoItem = document.createElement("li");
-    repoItem.classList.add("repo")
-    repoItem.innerHTML = `<h3>${repo.name}</h3>`
-    repoList.append(repoItem)
-}
-}
+    repoItem.classList.add("repo");
+    repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+    repoList.append(repoItem);
+  }
+};
 
+//Add event listener to output name of repo clicked on
+repoList.addEventListener("click", function (e) {
+  if (e.target.matches("h3")) {
+    const repoName = e.target.innerText;
+    getRepoInfo(repoName);
+  }
+});
 
-// Save and view the page. Under your profile information, you should now see your repos beginning with the 
-//repo you’ve updated most recently (see screenshot above).
-// Add and commit your changes with the command line. 
-//Push the changes up to GitHub. Copy the link to your repo and submit it below.
+// Create a function to get specific repo information
+const getRepoInfo = async function (repoName) {
+  const fetchInfo = await fetch(
+    `https://api.github.com/repos/${userName}/${repoName}`
+  );
+  const repoInfo = await fetchInfo.json();
+  console.log(repoInfo);
+
+  // Create an array of languages used
+  const fetchLanguages = await fetch(repoInfo.languages_url);
+  const languageData = await fetchLanguages.json();
+  console.log(languageData);
+  const languages = [];
+  for (const language in languageData) {
+    languages.push(language);
+  }
+  console.log(languages);
+  displayRepoInfo(repoInfo, languages);
+};
+
+const displayRepoInfo = function (repoInfo, languages) {
+  repoData.innerHTML = "";
+  repoData.classList.remove("hide");
+  reposContainer.classList.add("hide");
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <h3>Name: ${repoInfo.name}</h3>
+    <p>Description: ${repoInfo.description}</p>
+    <p>Default Branch: ${repoInfo.default_branch}</p>
+    <p>Languages: ${languages.join(", ")}</p>
+    <a class="visit" href="${
+      repoInfo.html_url
+    }" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
+  `;
+  repoData.append(div);
+};
