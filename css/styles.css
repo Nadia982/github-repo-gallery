@@ -37,9 +37,9 @@ img {
 
 h1 {
     width: 100%;
-    padding: 1em 0.5em;
+    padding: 1em 0.5em 0.5em;
     margin: 0;
-    font-size: 3.5em;
+    font-size: 3em;
     text-align: center;
     font-family: "Oswald", sans-serif;
     background-color: #483978;
@@ -110,7 +110,7 @@ ul {
     background-color: #483978;
     color: white;
     font-size: 18px;
-    padding-bottom: 2em;
+    padding-bottom: 1em;
 }
 
 .user-info figure {
@@ -140,11 +140,20 @@ ul {
 }
 
 .filter-repos {
-    width: 300px;
+    min-width: 350px;
     margin-top: 1em;
     padding: 1em;
     margin-bottom: 1em;
-    border: 2px solid #483978;
+    border: 4px solid #f86d58;
+    border-radius: 6px;
+    outline-color: #9b8dc9;
+}
+
+.filter-repos::placeholder {
+    color: #9b8dc9;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 section.repo-data {
@@ -159,7 +168,7 @@ section.repo-data {
     justify-content: center;
     background-color: #fff;
     margin-top: 0;
-    padding: 2em;
+    padding: 1em;
 }
 
 .repo-list {
@@ -228,6 +237,11 @@ section.repo-data {
 .view-repos {
     max-width: 200px;
     margin-top: 0;
+    display: flex;
+}
+
+.arrow {
+    font-size: 2rem;
 }
 
 @media (min-width: 700px) {
