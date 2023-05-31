@@ -14,10 +14,10 @@ const reposContainer = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
 
 //selects the "Back to Repo Gallery" button.
-const backToRepoGallery = document.querySelector(".view-repos")
+const backToRepoGallery = document.querySelector(".view-repos");
 
 // selects the input with the “Search by name” placeholder
-const searchByName = document.querySelector(".filter-repos")
+const searchByName = document.querySelector(".filter-repos");
 
 // async function to fetch info from GitHub profile
 async function fetchUser() {
@@ -64,7 +64,10 @@ const displayRepos = function (repos) {
   for (const repo of repos) {
     const repoItem = document.createElement("li");
     repoItem.classList.add("repo");
-    repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+    repoItem.innerHTML = `
+    <h3>${repo.name}</h3>
+    <p>${repo.description}</p>
+    `;
     repoList.append(repoItem);
   }
 };
@@ -97,9 +100,9 @@ const getRepoInfo = async function (repoName) {
   displayRepoInfo(repoInfo, languages);
 };
 
-// Display individual repo info 
+// Display individual repo info
 const displayRepoInfo = function (repoInfo, languages) {
-  backToRepoGallery.classList.remove("hide")
+  backToRepoGallery.classList.remove("hide");
   repoData.innerHTML = "";
   repoData.classList.remove("hide");
   reposContainer.classList.add("hide");
@@ -117,30 +120,24 @@ const displayRepoInfo = function (repoInfo, languages) {
 };
 
 // Add a click event to the back button
-backToRepoGallery.addEventListener("click", function(){
+backToRepoGallery.addEventListener("click", function () {
   reposContainer.classList.remove("hide");
   repoData.classList.add("hide");
   backToRepoGallery.classList.add("hide");
-})
- 
-////selects the "Back to Repo Gallery" button.
-// const backToRepoGallery = document.querySelector(".view-repos")
-
-// selects the input with the “Search by name” placeholder
-// const searchByName = document.querySelector(".filter-repos")
+});
 
 // Add an Input Event to the Search Box
-searchByName.addEventListener("input", function(e){
+searchByName.addEventListener("input", function (e) {
   const searchTextValue = e.target.value;
-  console.log(searchTextValue)
-  const repos = document.querySelectorAll(".repo")
-  const lowercaseSearchTextValue = searchTextValue.toLowerCase()
-  for (const repo of repos){
+  console.log(searchTextValue);
+  const repos = document.querySelectorAll(".repo");
+  const lowercaseSearchTextValue = searchTextValue.toLowerCase();
+  for (const repo of repos) {
     const lowercaseRepoText = repo.innerText.toLowerCase();
-    if(lowercaseRepoText.includes(lowercaseSearchTextValue)){
-      repo.classList.remove("hide")      
+    if (lowercaseRepoText.includes(lowercaseSearchTextValue)) {
+      repo.classList.remove("hide");
     } else {
-      repo.classList.add("hide")
+      repo.classList.add("hide");
     }
   }
-})
+});
